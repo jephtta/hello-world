@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hello World
 
-## Getting Started
+A minimal Next.js application that displays centered "Hello World" text. Built with TypeScript, Tailwind CSS, and deployed to Google Cloud Run. Uses Firebase Firestore as the database layer (configured, rules deny all access by default).
 
-First, run the development server:
+## Live URL
+
+<https://hello-world-443521829717.us-central1.run.app>
+
+## Prerequisites
+
+- Node.js 20+ (22 recommended — matches the Docker image)
+- npm 10+
+- A Firebase project (for Firestore configuration)
+- Google Cloud account with Cloud Run enabled (for deployment)
+
+## Local Setup
 
 ```bash
+# Clone the repo
+git clone https://github.com/jephtta/hello-world.git
+cd hello-world
+
+# Install dependencies
+npm install
+
+# Create .env.local with your Firebase config (see Environment Variables below)
+
+# Start the dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open <http://localhost:3000> to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a `.env.local` file with these values. All are prefixed `NEXT_PUBLIC_` for client-side availability.
 
-## Learn More
+| Variable | Description | Where to find it |
+|---|---|---|
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | Firebase Web API key | Firebase Console → Project Settings → General |
+| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Firebase Auth domain | Same page, under "Your apps" |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Firebase project ID | Same page |
+| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Cloud Storage bucket | Same page |
+| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Cloud Messaging sender ID | Same page |
+| `NEXT_PUBLIC_FIREBASE_APP_ID` | Firebase app ID | Same page |
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Command | Description |
+|---|---|
+| `npm run dev` | Start development server (Turbopack) |
+| `npm run build` | Production build (standalone output) |
+| `npm start` | Start production server |
+| `npm run lint` | Run ESLint |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Running Tests
 
-## Deploy on Vercel
+```bash
+# Install Playwright browsers (first time only)
+npx playwright install
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Run all e2e tests
+npx playwright test
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Run with UI
+npx playwright test --ui
+```
+
+Tests are in `e2e/` and include:
+- **hello-world.spec.ts** — 8 tests covering rendering, centering, title, error-free loading, lang attribute, meta description, 404 handling, and mobile viewport
+- **smoke.spec.ts** — 4 tests covering HTTP 200, JS error-free rendering, heading visibility, and valid HTML structure
+
+## Deployment
+
+The app is containerized with a multi-stage Dockerfile and deployed to Google Cloud Run.
+
+```bash
+gcloud run deploy hello-world --source .
+```
+
+## Tech Stack
+
+- **Framework**: Next.js 15 (App Router, standalone output)
+- **Language**: TypeScript (strict mode)
+- **Styling**: Tailwind CSS 4 + shadcn/ui
+- **Database**: Firebase Firestore
+- **Testing**: Playwright
+- **Hosting**: Google Cloud Run

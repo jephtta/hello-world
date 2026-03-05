@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Deny all reads and writes by default.
+    // This app does not use Firestore for data access.
+    // Add specific rules here when features require database access.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
